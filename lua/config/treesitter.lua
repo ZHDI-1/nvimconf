@@ -2,9 +2,10 @@ local M = {}
 
 function M.config()
   -- nvim-treesitter config
-  local language_list = { "python", "javascript", "cmake", "css", "devicetree", "dot", "dockerfile", "html", "json",
-    "kconfig", "latex", "llvm", "luadoc", "make", "ninja", "rust", "zig", "swift", "tmux", "tsx", "tsv", "typescript",
-    "xml", "yaml", "bash", "c", "cpp", "vim", "lua", "markdown"}
+  -- local language_list = { "python", "javascript", "cmake", "css", "devicetree", "dot", "dockerfile", "html", "json",
+  --   "kconfig", "latex", "llvm", "luadoc", "make", "ninja", "rust", "zig", "swift", "tmux", "tsx", "tsv", "typescript",
+  --   "xml", "yaml", "bash", "c", "cpp", "vim", "lua", "markdown"}
+  local language_list = { "python", "bash", "c", "cpp" }
 
   ---@diagnostic disable-next-line: missing-fields
   require 'nvim-treesitter.configs'.setup {

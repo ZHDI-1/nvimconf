@@ -96,9 +96,9 @@ if vim.g.shadowvim == nil and vim.g.vscode == nil then
       show_exact_scope = true,
     }
   })
-  require("leetcode").setup({
-    lang = "c",
-  })
+  -- require("leetcode").setup({
+  --   lang = "c",
+  -- })
 end
 require("core.autocommand")
 require("core.keymap")

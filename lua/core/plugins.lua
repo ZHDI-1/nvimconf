@@ -86,16 +86,17 @@ return require('packer').startup(function(use)
   use 'terrortylor/nvim-comment'
   use 'kylechui/nvim-surround'
   use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
+  use 'mbbill/undotree'
 
-  use {
-    "kawre/leetcode.nvim",
-    run = ":TSUpdate html", -- if you have `nvim-treesitter` installed
-    requires = {
-      "ibhagwan/fzf-lua",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-    }
-  }
+  -- use {
+  --   "kawre/leetcode.nvim",
+  --   run = ":TSUpdate html", -- if you have `nvim-treesitter` installed
+  --   requires = {
+  --     "ibhagwan/fzf-lua",
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --   }
+  -- }
   use({
     "stevearc/oil.nvim",
     config = function()

@@ -83,6 +83,7 @@ if vim.g.shadowvim == nil and vim.g.vscode == nil then
       end
   })
   require("config.statusline").config()
+  require("config.oil").config()
   require("config.terminal").config()
   require("config.treesitter").config()
   require('config.telescope').config()

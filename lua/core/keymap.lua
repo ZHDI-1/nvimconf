@@ -30,7 +30,7 @@ vim.keymap.set('n', '<leader>fr', fzf_builtin.lsp_references, {})
 vim.keymap.set('n', '<leader>fi', fzf_builtin.lsp_incoming_calls, {})
 vim.keymap.set('n', '<leader>fo', fzf_builtin.lsp_outgoing_calls, {})
 vim.keymap.set('n', 'gr', fzf_builtin.lsp_references, {})
-vim.keymap.set('n', '<leader>fm', ':FzfLua ', { noremap = true })
+vim.keymap.set('n', '<leader>fm', fzf_builtin.marks, {})
 
 -- tabs
 vim.keymap.set('n', '<leader>tn', ':tabnext<CR>', { noremap = true })

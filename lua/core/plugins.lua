@@ -31,6 +31,7 @@ return require('packer').startup(function(use)
     run = ':TSUpdate'
   }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
+  use 'nvim-treesitter/nvim-treesitter-context'
   use {
     'luckasRanarison/tailwind-tools.nvim',
     run = ':UpdateRemotePlugins'

@@ -56,6 +56,14 @@ function M.config()
         ["ctrl-w"] = { fn = actions.buf_del, reload = true },
       }
     },
+    marks = {
+        actions = {
+          ['ctrl-w'] = {
+            fn = actions.mark_del,
+            reload = true
+          }
+        },
+      },
   }
 end
 

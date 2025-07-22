@@ -60,6 +60,7 @@ function M.config()
         --
         -- local compile_commands_dir = find_compile_commands()
         config = {
+          root_dir = require('lspconfig.util').root_pattern('buildsofcmake/compile_commands.json', '.clangd', 'compile_commands.json'),
           cmd = {
             "clangd",
             "--background-index",

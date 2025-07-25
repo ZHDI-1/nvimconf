@@ -39,28 +39,64 @@ function M.config()
       --   }
       -- end
       if lsp == 'clangd' then
-        -- local function find_compile_commands()
-        --   local root_dir = 
-        --   local possible_dirs = {
-        --     root_dir .. "/cmake_build",
-        --     root_dir .. "/build",
-        --     root_dir .. "/cmake-build-debug",
-        --     root_dir .. "/cmake-build-release",
-        --     root_dir
-        --   }
-        --
-        --   for _, dir in ipairs(possible_dirs) do
-        --     if vim.fn.filereadable(dir .. "/compile_commands.json") == 1 then
-        --       return dir
-        --     end
-        --   end
-        --
-        --   return root_dir .. "/cmake_build" -- fallback
-        -- end
-        --
-        -- local compile_commands_dir = find_compile_commands()
+        local lsp_util = require('lspconfig.util')
+        local possible_build_dirs = {
+          "build",
+          "cmake-build-debug",
+          "cmake-build-release",
+          "cmake_build",
+          "buildsofcmake",
+        }
+        -- 2. Define a fallback directory to use if no compile_commands.json is found.
+        local fallback_dir = "build"
+
+        -- 3. Generate a list of patterns for finding the project root.
+        -- We combine standard project markers with checks for compile_commands.json
+        -- in all our possible build directories.
+        local root_patterns = {}
+        for _, dir in ipairs(possible_build_dirs) do
+          table.insert(root_patterns, dir .. '/compile_commands.json')
+        end
+        table.insert(root_patterns, '.git')
+        table.insert(root_patterns, '.clangd')
+        table.insert(root_patterns, 'compile_commands.json')
+
+        local root_detector = lsp_util.root_pattern(unpack(root_patterns))
+
+        local find_compile = function()
+          local project_root = root_detector()
+
+          if not project_root then
+            return
+          end
+
+          local compile_commands_dir
+          -- first find from root dir of project
+          if vim.fn.filereadable(project_root .. '/compile_commands.json') == 1 then
+            compile_commands_dir = project_root
+          else
+            -- If not, search through the list of possible build directories.
+            for _, dir_name in ipairs(possible_build_dirs) do
+              local check_path = project_root .. '/' .. dir_name
+              if vim.fn.filereadable(check_path .. '/compile_commands.json') == 1 then
+                compile_commands_dir = dir_name
+                break -- Stop searching once we find the first match.
+              end
+            end
+          end
+
+          -- If we didn't find any specific directory, use the configured fallback.
+          if not compile_commands_dir then
+            compile_commands_dir = project_root .. '/' .. fallback_dir
+          end
+
+          return compile_commands_dir
+        end
+
+        
+        local compile_commands_dir = find_compile() 
         config = {
-          root_dir = require('lspconfig.util').root_pattern('buildsofcmake/compile_commands.json', '.clangd', 'compile_commands.json'),
+          root_dir = root_detector,
           cmd = {
             "clangd",
             "--background-index",
@@ -70,7 +106,8 @@ function M.config()
             "--rename-file-limit=500",
             "-j", "30",
             "--pch-storage=memory",
-            "--compile-commands-dir=buildsofcmake"}
+            "--compile-commands-dir=" .. compile_commands_dir 
+          }
         }
       end
       if lsp == 'hdl_checker' then

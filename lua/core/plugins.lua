@@ -88,6 +88,9 @@ return require('packer').startup(function(use)
   use 'kylechui/nvim-surround'
   use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
   use 'mbbill/undotree'
+  use 'tpope/vim-fugitive'
+  use 'lewis6991/gitsigns.nvim'
+  
 
   -- use {
   --   "kawre/leetcode.nvim",

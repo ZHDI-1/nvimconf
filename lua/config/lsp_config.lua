@@ -67,10 +67,10 @@ function M.config()
           local project_root = root_detector()
 
           if not project_root then
-            return
+            return fallback_dir
           end
 
-          local compile_commands_dir
+          local compile_commands_dir = fallback_dir
           -- first find from root dir of project
           if vim.fn.filereadable(project_root .. '/compile_commands.json') == 1 then
             compile_commands_dir = project_root

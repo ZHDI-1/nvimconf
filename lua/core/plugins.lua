@@ -22,10 +22,18 @@ return require('packer').startup(function(use)
   -- language
   use 'neovim/nvim-lspconfig'
   use 'L3MON4D3/LuaSnip'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/nvim-cmp'
-  use 'saadparwaiz1/cmp_luasnip'
+
+  use { 'saghen/blink.cmp',
+    tag="v1.6.0"
+  }
+
+  -- use 'hrsh7th/cmp-buffer'
+  -- use 'hrsh7th/cmp-nvim-lsp'
+  -- use 'saadparwaiz1/cmp_luasnip'
+  -- use 'hrsh7th/cmp-path'
+  -- use 'hrsh7th/cmp-cmdline'
+  -- use 'hrsh7th/nvim-cmp'
+
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate'
@@ -39,10 +47,10 @@ return require('packer').startup(function(use)
   use {
     'nvim-flutter/flutter-tools.nvim',
     requires = {
-        'nvim-lua/plenary.nvim',
-        'stevearc/dressing.nvim', -- optional for vim.ui.select
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
-    config = function ()
+    config = function()
       require("flutter-tools").setup {}
     end
   }
@@ -90,7 +98,7 @@ return require('packer').startup(function(use)
   use 'mbbill/undotree'
   use 'tpope/vim-fugitive'
   use 'lewis6991/gitsigns.nvim'
-  
+
 
   -- use {
   --   "kawre/leetcode.nvim",

@@ -2,14 +2,9 @@ local M = {}
 function M.config()
   local actions = require("fzf-lua").actions
   require("fzf-lua").setup {
+    "ivy",
     winopts = {
       height = 0.85,       -- window height
-      width  = 1,       -- window width
-      row    = 1,          -- window row position (0=top, 1=bottom)
-      col    = 0,          -- window col position (0=left, 1=right)
-      preview = {
-        horizontal = "right:50%"
-      }
     },
     keymap = {
       builtin = {

@@ -35,6 +35,7 @@ function M.config()
         ["ctrl-b"] = "half-page-up",
         ["ctrl-a"] = "beginning-of-line",
         ["ctrl-e"] = "end-of-line",
+        ["ctrl-q"] = "select-all+accept",
         ["alt-a"]  = "toggle-all",
         ["alt-g"]  = "first",
         ["alt-G"]  = "last",

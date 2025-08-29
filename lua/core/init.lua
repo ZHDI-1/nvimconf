@@ -70,12 +70,24 @@ require("neodev").setup()
 if vim.g.shadowvim == nil and vim.g.vscode == nil then
   -- themes
   -- vim.g.gruvbox_material_background = 'hard'
-  vim.g.gruvbox_material_foreground = 'material'
-  vim.g.gruvbox_material_transparent_background = 0
-  vim.g.gruvbox_material_better_performance = 1
-  vim.o.background = 'dark'
-  vim.cmd([[colorscheme gruvbox-material]])
-  -- require("vscode").load()
+  -- vim.g.gruvbox_material_foreground = 'material'
+  -- vim.g.gruvbox_material_transparent_background = 0
+  -- vim.g.gruvbox_material_better_performance = 1
+  -- vim.o.background = 'dark'
+  -- vim.cmd([[colorscheme gruvbox-material]])
+  -- require("vscode")load()
+  --
+  -- vim.cmd("colorscheme kanagawa-dragon")
+  --
+  --
+  vim.g.everforest_background = 'hard'
+  vim.g.everforest_enable_italic = 1
+  vim.g.everforest_sign_column_background = 'grey'
+  vim.g.everforest_spell_foreground = 'colored'
+  vim.g.everforest_ui_contrast = 'high'
+  vim.g.everforest_diagnostic_text_highlight = 1
+  vim.g.everforest_diagnostic_line_highlight = 1
+  vim.cmd("colorscheme everforest")
   require("config.lsp_config").config()
   require("config.lsp_misc").config()
   require('ufo').setup({

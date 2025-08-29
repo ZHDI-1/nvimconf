@@ -29,7 +29,8 @@ vim.keymap.set('n', '<leader>fs', fzf_builtin.lsp_live_workspace_symbols, {})
 vim.keymap.set('n', '<leader>fr', fzf_builtin.lsp_references, {})
 vim.keymap.set('n', '<leader>fi', fzf_builtin.lsp_incoming_calls, {})
 vim.keymap.set('n', '<leader>fo', fzf_builtin.lsp_outgoing_calls, {})
-vim.keymap.set('n', 'gr', fzf_builtin.lsp_references, {})
+vim.keymap.set('n', '<leader>fa', fzf_builtin.lsp_code_actions, {})
+-- vim.keymap.set('n', 'gr', fzf_builtin.lsp_references, {})
 vim.keymap.set('n', '<leader>fm', fzf_builtin.marks, {})
 
 -- tabs
@@ -40,6 +41,10 @@ vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 vim.keymap.set('n', '<leader>tr', ':Tabby rename_tab ', { noremap = true })
+
+-- quickfix
+
+-- vim.keymap.set('n', ']e', ':<CR>', { noremap = true })
 
 
 -- movelines
@@ -78,6 +83,8 @@ vim.keymap.set('v', '<a-r>', ':s/\\v//g<Left><Left><Left>')
 vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle('diagnostics') end)
 vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
 vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("symbols") end)
+vim.keymap.set("n", "[e", function() require("trouble").prev({jump=true}) end)
+vim.keymap.set("n", "]e", function() require("trouble").next({jump=true}) end)
 -- vim.keymap.set("n", "gr", function() require("trouble").toggle("lsp_references") end)
 
 -- auto pair
@@ -225,14 +232,7 @@ local function navigate(direction)
   end
 end
 
--- Set up keybindings
 vim.keymap.set('n', '<C-w>h', function() navigate('h') end)
 vim.keymap.set('n', '<C-w>j', function() navigate('j') end)
 vim.keymap.set('n', '<C-w>k', function() navigate('k') end)
 vim.keymap.set('n', '<C-w>l', function() navigate('l') end)
-
--- Optional: More direct bindings if you prefer
--- vim.keymap.set('n', '<C-h>', function() navigate('h') end)
--- vim.keymap.set('n', '<C-j>', function() navigate('j') end)
--- vim.keymap.set('n', '<C-k>', function() navigate('k') end)
--- vim.keymap.set('n', '<C-l>', function() navigate('l') end)

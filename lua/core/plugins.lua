@@ -86,7 +86,9 @@ return require('packer').startup(function(use)
 
 
   -- theme
+  use 'sainnhe/everforest'
   use 'sainnhe/gruvbox-material'
+  use "rebelot/kanagawa.nvim"
   use 'Mofiqul/vscode.nvim'
   -- might add: git-messager gitsigns
   -- lua dev pulgin

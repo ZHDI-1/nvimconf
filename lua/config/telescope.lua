@@ -4,7 +4,7 @@ function M.config()
   require("fzf-lua").setup {
     "ivy",
     winopts = {
-      height = 0.85,       -- window height
+      height = 1,       -- window height
     },
     keymap = {
       builtin = {

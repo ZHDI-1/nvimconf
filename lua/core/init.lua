@@ -26,6 +26,8 @@ vim.opt.scrolloff             = 8
 vim.opt.sidescrolloff         = 8
 vim.opt.undofile              = true
 vim.opt.fileencodings = 'ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1'
+vim.opt.inccommand            = "split"
+vim.opt.incsearch             = true
 
 -- fold
 vim.o.foldcolumn              = '1'
@@ -59,6 +61,17 @@ vim.g.clipboard = {
     ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
   },
 }
+
+require('vim._extui').enable({
+  enable = true, -- Whether to enable or disable the UI.
+  msg = { -- Options related to the message module.
+    ---@type 'cmd'|'msg' Where to place regular messages, either in the
+    ---cmdline or in a separate ephemeral message window.
+    target = 'msg',
+    timeout = 4000, -- Time a message is visible in the message window.
+  },
+})
+
 -- load core config
 require("core.plugins")
 require("mason").setup()

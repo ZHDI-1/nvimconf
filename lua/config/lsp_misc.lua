@@ -1,94 +1,82 @@
 local M = {}
--- luasnip setup
+
 function M.config()
   local luasnip = require 'luasnip'
+  local blink = require("blink.cmp")
 
-  local cmp = require("blink.cmp")
-  cmp.setup({
-    keymap = { preset = 'default' },
+  blink.setup({
+    -- 'default' for mappings similar to built-in completion
+    -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+    -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+    -- We use 'none' here to strictly match your old nvim-cmp manual bindings
+    keymap = {
+      preset = 'none',
+
+      ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-e>']     = { 'hide' },
+      
+      -- Emulate nvim-cmp: <C-y> confirms selection
+      ['<C-y>']     = { 'select_and_accept' },
+
+      -- Emulate nvim-cmp: <C-u>/<C-d> for doc scrolling
+      ['<C-u>']     = { 'scroll_documentation_up' },
+      ['<C-d>']     = { 'scroll_documentation_down' },
+
+      -- Emulate nvim-cmp: Up/Down to navigate list
+      ['<Up>']      = { 'select_prev', 'fallback' },
+      ['<Down>']    = { 'select_next', 'fallback' },
+      ['<C-p>']     = { 'select_prev', 'fallback' },
+      ['<C-n>']     = { 'select_next', 'fallback' },
+
+      -- Emulate nvim-cmp: CR (Enter) is disabled for completion (passes through to newline)
+      ['<CR>']      = { 'fallback_to_mappings' },
+
+      -- Emulate nvim-cmp: Tab Logic
+      -- 1. If snippet active: Jump
+      -- 2. Else if menu open: Select Next
+      -- 3. Else: Fallback (indent)
+      ['<Tab>']     = { 'snippet_forward', 'select_next', 'fallback' },
+      ['<S-Tab>']   = { 'snippet_backward', 'select_prev', 'fallback' },
+    },
 
     appearance = {
       -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
       nerd_font_variant = 'mono'
     },
 
-    -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = false } },
+    signature = { enabled = true },
 
-    -- Default list of enabled providers defined so that you can extend it
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    -- Integrate LuaSnip
+    snippets = { preset = 'luasnip' },
+
+    -- Sources configuration
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
+      
+      -- Configure specific provider options (like keyword length)
+      providers = {
+        lsp = {
+          min_keyword_length = 2, -- Matches your old completion.keyword_length = 2
+        },
+        buffer = {
+          min_keyword_length = 2,
+        },
+      },
     },
 
-    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-    --
-    -- See the fuzzy documentation for more information
+    completion = { 
+        keyword = { range = 'prefix' },
+
+        documentation = { auto_show = true, auto_show_delay_ms = 200 },
+        list = { selection = { preselect = true, auto_insert = true } },
+    },
+
+    -- Fuzzy matcher settings
     fuzzy = { implementation = "prefer_rust_with_warning" }
   })
 
-  -- nvim-cmp setup
-  -- local cmp = require 'cmp'
-
-  -- cmp.setup({
-  --   snippet = {
-  --     expand = function(args)
-  --       luasnip.lsp_expand(args.body)
-  --     end,
-  --
-  --   },
-  --   completion = {
-  --     keyword_length = 2,
-  --   },
-  --   performance = {
-  --     max_view_entries = 100,
-  --     async_budget = 1,
-  --     debounce = 50,
-  --     confirm_resolve_timeout = 65,
-  --     throttle = 30,
-  --     fetching_timeout = 200,
-  --   },
-  --   mapping = cmp.mapping.preset.insert({
-  --     ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-  --     ['<C-d>'] = cmp.mapping.scroll_docs(4),  -- Down
-  --     -- C-b (back) C-f (forward) for snippet placeholder navigation.
-  --     ['<C-Space>'] = cmp.mapping.complete(),
-  --     ['<C-y>'] = cmp.mapping.confirm {
-  --       behavior = cmp.ConfirmBehavior.Replace,
-  --       select = true,
-  --     },
-  --     ['CR'] = cmp.config.disable,
-  --     ["<Tab>"] = cmp.mapping(function(fallback)
-  --       if luasnip.locally_jumpable(1) then
-  --         luasnip.jump(1)
-  --       else
-  --         fallback()
-  --       end
-  --     end, { "i", "s" }),
-  --     ["<S-Tab>"] = cmp.mapping(function(fallback)
-  --       if luasnip.locally_jumpable(-1) then
-  --         luasnip.jump(-1)
-  --       else
-  --         fallback()
-  --       end
-  --     end, { "i", "s" }),
-  --
-  --   }),
-  --   sources = {
-  --     { name = 'nvim_lsp' },
-  --     { name = 'luasnip' },
-  --     { name = 'buffer' },
-  --   },
-  -- })
-
-  -- troube
-  require("trouble").setup {
-  }
-
-  -- ufo-fold
+  -- trouble setup
+  require("trouble").setup {}
 end
 
 return M

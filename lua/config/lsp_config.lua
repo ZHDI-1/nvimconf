@@ -104,7 +104,7 @@ function M.config()
             "--limit-references=1000",
             "--limit-results=1000",
             "--rename-file-limit=500",
-            "-j", "30",
+            "-j", "48",
             "--pch-storage=memory",
             "--compile-commands-dir=" .. compile_commands_dir 
           }

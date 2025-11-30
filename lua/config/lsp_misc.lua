@@ -10,11 +10,11 @@ function M.config()
     -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
     -- We use 'none' here to strictly match your old nvim-cmp manual bindings
     keymap = {
-      preset = 'none',
+      preset        = 'none',
 
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>']     = { 'hide' },
-      
+
       -- Emulate nvim-cmp: <C-y> confirms selection
       ['<C-y>']     = { 'select_and_accept' },
 
@@ -51,8 +51,8 @@ function M.config()
 
     -- Sources configuration
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
-      
+      default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+
       -- Configure specific provider options (like keyword length)
       providers = {
         lsp = {
@@ -61,14 +61,20 @@ function M.config()
         buffer = {
           min_keyword_length = 2,
         },
+        lazydev = {
+          name = "LazyDev",
+          module = "lazydev.integrations.blink",
+          -- make lazydev completions top priority (see `:h blink.cmp`)
+          score_offset = 100,
+        },
       },
     },
 
-    completion = { 
-        keyword = { range = 'prefix' },
+    completion = {
+      keyword = { range = 'prefix' },
 
-        documentation = { auto_show = true, auto_show_delay_ms = 200 },
-        list = { selection = { preselect = true, auto_insert = true } },
+      documentation = { auto_show = true, auto_show_delay_ms = 200 },
+      list = { selection = { preselect = true, auto_insert = true } },
     },
 
     -- Fuzzy matcher settings

@@ -80,7 +80,6 @@ require("mason").setup()
 -- }
 require("nvim_comment").setup()
 require("nvim-surround").setup()
-require("neodev").setup()
 if vim.g.shadowvim == nil and vim.g.vscode == nil then
   -- themes
   -- vim.g.gruvbox_material_background = 'hard'

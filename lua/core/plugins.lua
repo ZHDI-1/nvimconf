@@ -23,7 +23,7 @@ return require('packer').startup(function(use)
   use 'L3MON4D3/LuaSnip'
 
   use { 'saghen/blink.cmp',
-    tag="v1.*"
+    tag = "v1.*"
   }
 
   -- use 'hrsh7th/cmp-buffer'
@@ -91,7 +91,6 @@ return require('packer').startup(function(use)
   use 'Mofiqul/vscode.nvim'
   -- might add: git-messager gitsigns
   -- lua dev pulgin
-  use 'folke/neodev.nvim'
   -- all setup in miscedit.lua
   use 'terrortylor/nvim-comment'
   use 'kylechui/nvim-surround'
@@ -101,17 +100,27 @@ return require('packer').startup(function(use)
   use 'lewis6991/gitsigns.nvim'
 
 
-  -- use {
-  --   "kawre/leetcode.nvim",
-  --   run = ":TSUpdate html", -- if you have `nvim-treesitter` installed
-  --   requires = {
-  --     "ibhagwan/fzf-lua",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --   }
-  -- }
   use "stevearc/oil.nvim"
 
+  use {
+    'folke/lazydev.nvim',
+    config = function()
+      require('lazydev').setup {
+        library = {
+          "lazy.nvim",
+          -- It can also be a table with trigger words / mods
+          -- Only load luvit types when the `vim.uv` word is found
+          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          -- always load the LazyVim library
+          "LazyVim",
+        },
+        -- disable when a .luarc.json file is found
+        enabled = function(root_dir)
+          return not vim.uv.fs_stat(root_dir .. "/.luarc.json")
+        end,
+      }
+    end
+  }
   if packer_bootstrap then
     require('packer').sync()
   end

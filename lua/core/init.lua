@@ -114,7 +114,7 @@ if vim.g.shadowvim == nil and vim.g.vscode == nil then
   require("config.terminal").config()
   require("config.treesitter").config()
   require('config.telescope').config()
-  require("tailwind-tools").setup({})
+  -- require("tailwind-tools").setup({})
   require("ibl").setup({
     indent = {
       char = '▏'

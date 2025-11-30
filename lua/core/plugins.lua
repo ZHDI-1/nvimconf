@@ -17,14 +17,13 @@ return require('packer').startup(function(use)
 
   use "dstein64/vim-startuptime"
   use "williamboman/mason.nvim"
-  use "williamboman/mason-lspconfig.nvim"
 
   -- language
   use 'neovim/nvim-lspconfig'
   use 'L3MON4D3/LuaSnip'
 
   use { 'saghen/blink.cmp',
-    tag="v1.6.0"
+    tag="v1.*"
   }
 
   -- use 'hrsh7th/cmp-buffer'
@@ -40,10 +39,10 @@ return require('packer').startup(function(use)
   }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'nvim-treesitter/nvim-treesitter-context'
-  use {
-    'luckasRanarison/tailwind-tools.nvim',
-    run = ':UpdateRemotePlugins'
-  }
+  -- use {
+  --   'luckasRanarison/tailwind-tools.nvim',
+  --   run = ':UpdateRemotePlugins'
+  -- }
   use {
     'nvim-flutter/flutter-tools.nvim',
     requires = {

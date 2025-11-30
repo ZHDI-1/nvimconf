@@ -4,43 +4,61 @@ function M.config()
   local blink = require("blink.cmp")
   local mason_registry = require('mason-registry')
 
-  -- 1. Define global capabilities for all LSP clients
+  -- 1. Helper: Get Mason Package Path Manually
+  -- This avoids the "attempt to call method 'get_install_path'" error by constructing 
+  -- the path directly: ~/.local/share/nvim/mason/packages/<name>
+  local function get_package_path(package_name)
+    local install_root = vim.fn.stdpath("data") .. "/mason/packages/" .. package_name
+    if vim.fn.isdirectory(install_root) == 1 then
+      return install_root
+    end
+    return nil
+  end
+
+  -- 2. Helper: Get Mason Binary Path
+  -- Mason links binaries to ~/.local/share/nvim/mason/bin
+  local function get_binary_path(binary_name)
+    local bin_path = vim.fn.stdpath("data") .. "/mason/bin/" .. binary_name
+    if vim.fn.filereadable(bin_path) == 1 then
+      return bin_path
+    end
+    -- Fallback to system PATH if mason binary doesn't exist
+    return binary_name 
+  end
+
+  -- 3. Define global capabilities
   local capabilities = blink.get_lsp_capabilities()
   capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
     lineFoldingOnly = true
   }
 
-  -- Apply capabilities to ALL servers by default
+  -- Apply capabilities to ALL servers
   vim.lsp.config('*', {
     capabilities = capabilities,
   })
 
-  -- 2. Define the list of servers to enable
   local servers = {
     'clangd', 'html', 'ts_ls', 'lua_ls', 'zls', 'rust_analyzer',
-    'pylsp', 'volar', 'lemminx', 'jsonls', 'verible', 'hdl_checker', 'bashls'
+    'pylsp', 'vue_ls', 'lemminx', 'jsonls', 'verible', 'hdl_checker', 'bashls'
   }
 
-  -- 3. Helper function for Python environment
   local function which_python()
-    local f = io.popen('env which python3', 'r') or error("Fail to execute 'env which python'")
-    local s = f:read('*a') or error("Fail to read from io.popen result")
+    local f = io.popen('env which python3', 'r')
+    if not f then return 'python3' end
+    local s = f:read('*a')
     f:close()
+    if not s then return 'python3' end
     return string.gsub(s, '%s+$', '')
   end
 
-  -- 4. Helper function to resolve Clangd Build Dir (Ported from your logic)
+  -- Clangd Command Builder
   local function get_clangd_cmd()
     local possible_build_dirs = {
       "build", "cmake-build-debug", "cmake-build-release", "cmake_build", "buildsofcmake",
     }
     local fallback_dir = "build"
-    
-    -- In Nvim 0.11, we use vim.fs.root for detection
-    -- We try to find the root based on your patterns
     local root_patterns = { '.git', '.clangd', 'compile_commands.json' }
-    -- Add build dir patterns to root detection
     for _, dir in ipairs(possible_build_dirs) do
       table.insert(root_patterns, dir .. '/compile_commands.json')
     end
@@ -78,13 +96,12 @@ function M.config()
     }
   end
 
-  -- 5. Server Specific Configurations
-  -- We set the config using vim.lsp.config('name', {cfg}) before enabling them
+  -- === Server Configs ===
 
   -- [clangd]
   vim.lsp.config('clangd', {
     cmd = get_clangd_cmd(),
-    root_markers = { '.clangd', 'compile_commands.json', '.git' } -- Native 0.11 root markers
+    root_markers = { '.clangd', 'compile_commands.json', '.git' }
   })
 
   -- [hdl_checker]
@@ -95,27 +112,31 @@ function M.config()
   -- [verible]
   vim.lsp.config('verible', {
     filetypes = { "systemverilog", "verilog" },
-    -- Dynamically resolve path via mason if possible, otherwise falls back to defaults or use explicit path
     cmd = {
-      mason_registry.get_package('verible'):get_install_path() .. '/bin/verible-verilog-ls',
+      get_binary_path('verible-verilog-ls'), -- Uses manual path check
       '--rules_config_search',
       '--rules=-line-length,-no-trailing-spaces,-no-tabs'
     }
   })
 
-  -- [ts_ls] (formerly tsserver)
-  local vue_ls_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
-  vim.lsp.config('ts_ls', {
-    init_options = {
-      plugins = {
-        {
-          name = "@vue/typescript-plugin",
-          location = vue_ls_path,
-          language = { 'vue' }
-        }
-      }
-    }
-  })
+  -- -- [ts_ls]
+  -- -- We need the specific location of the Vue language server module
+  -- local vue_pkg_path = get_package_path('vue-language-server')
+  -- local ts_plugins = {}
+  --
+  -- if vue_pkg_path then
+  --   table.insert(ts_plugins, {
+  --     name = "@vue/typescript-plugin",
+  --     location = vue_pkg_path .. '/node_modules/@vue/language-server',
+  --     language = { 'vue' }
+  --   })
+  -- end
+  --
+  -- vim.lsp.config('ts_ls', {
+  --   init_options = {
+  --     plugins = ts_plugins
+  --   }
+  -- })
 
   -- [pylsp]
   vim.lsp.config('pylsp', {
@@ -156,44 +177,14 @@ function M.config()
     }
   })
 
-  -- [volar]
-  vim.lsp.config('volar', {
-    init_options = {
-      vue = { hybridMode = false },
-      typescript = { tsdk = '' },
-      languageFeatures = {
-        implementation = true,
-        references = true,
-        definition = true,
-        typeDefinition = true,
-        callHierarchy = true,
-        hover = true,
-        rename = true,
-        renameFileRefactoring = true,
-        signatureHelp = true,
-        codeAction = true,
-        workspaceSymbol = true,
-        completion = {
-          defaultTagNameCase = 'both',
-          defaultAttrNameCase = 'kebabCase',
-          getDocumentNameCasesRequest = false,
-          getDocumentSelectionRequest = false,
-        },
-      }
-    }
-  })
-
-  -- 6. Enable all servers
-  -- This replaces the loop iterating over setup()
+  -- 4. Enable all servers
   vim.lsp.enable(servers)
 
-  -- 7. Keymaps and Buffer Attachment (LspAttach)
+  -- 5. Attach Keymaps
   vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
     callback = function(ev)
-      -- Enable completion triggered by <c-x><c-o>
       vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
       local opts = { buffer = ev.buf }
       vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)

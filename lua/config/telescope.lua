@@ -35,7 +35,8 @@ function M.config()
         ["ctrl-b"] = "half-page-up",
         ["ctrl-a"] = "beginning-of-line",
         ["ctrl-e"] = "end-of-line",
-        ["ctrl-q"] = "select-all+accept",
+        ["alt-q"] = "select-all+accept",
+        ["ctrl-y"] = "toggle-down",
         ["alt-a"]  = "toggle-all",
         ["alt-g"]  = "first",
         ["alt-G"]  = "last",
@@ -45,11 +46,23 @@ function M.config()
       },
     },
     files = {
-      cwd_header = true
+      cwd_header = true,
+      actions = {
+        ["ctrl-q"] = actions.file_sel_to_qf,
+        ["alt-q"]  = actions.file_sel_to_qf,
+      },
     },
     buffers = {
       actions = {
         ["ctrl-w"] = { fn = actions.buf_del, reload = true },
+        ["ctrl-q"] = actions.buf_sel_to_qf, -- Use buffer specific action for buffers
+        ["alt-q"] = actions.buf_sel_to_qf, -- Use buffer specific action for buffers
+      }
+    },
+    grep = {
+      actions = {
+        ["ctrl-q"] = actions.file_sel_to_qf,
+        ["alt-q"]  = actions.file_sel_to_qf,
       }
     },
     marks = {

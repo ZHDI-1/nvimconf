@@ -24,7 +24,8 @@ vim.keymap.set('n', '<leader>e', fzf_builtin.buffers, {})
 vim.keymap.set('n', '<leader>fl', fzf_builtin.lgrep_curbuf, {})
 -- vim.keymap.set('n', '<leader>fcl', fzf_builtin.lines, {})
 -- vim.keymap.set('n', '<leader>ft', fzf_builtin.tmux_buffers, {})
-vim.keymap.set('n', '<leader>ft', fzf_builtin.tabs, {})
+-- vim.keymap.set('n', '<leader>ft', fzf_builtin.tabs, {})
+-- change ft to use tabby's window selector
 vim.keymap.set('n', '<leader>fs', fzf_builtin.lsp_live_workspace_symbols, {})
 vim.keymap.set('n', '<leader>fr', fzf_builtin.lsp_references, {})
 vim.keymap.set('n', '<leader>fi', fzf_builtin.lsp_incoming_calls, {})
@@ -41,20 +42,9 @@ vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 vim.keymap.set('n', '<leader>tr', ':Tabby rename_tab ', { noremap = true })
+vim.keymap.set('n', '<leader>ft', ':Tabby pick_window<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>gt', ':Tabby jump_to_tab<CR>', { noremap = true })
 
--- quickfix
-
--- vim.keymap.set('n', ']e', ':<CR>', { noremap = true })
-
-
--- movelines
--- dont think i need this anymore
--- vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { noremap = true })
--- vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { noremap = true })
--- vim.keymap.set('i', '<A-j>', '<Esc>:m .+1<CR>==gi', { noremap = true })
--- vim.keymap.set('i', '<A-k>', '<Esc>:m .-2<CR>==gi', { noremap = true })
--- vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { noremap = true })
--- vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { noremap = true })
 
 -- copy to clipboard
 vim.keymap.set('n', "<leader>y", '"+y', { noremap = true })
@@ -62,15 +52,6 @@ vim.keymap.set('v', "<leader>y", '"+y', { noremap = true })
 vim.keymap.set('n', "<leader>p", '"+p', { noremap = true })
 vim.keymap.set('v', "<leader>p", '"+p', { noremap = true })
 
--- windows
--- vim.keymap.set('n', '<A-->', '<c-w>-')
--- vim.keymap.set('n', '<A-=>', '<c-w>+')
--- vim.keymap.set('n', '<A-0>', '<c-w>>')
--- vim.keymap.set('n', '<A-9>', '<c-w><')
--- vim.keymap.set('i', '<A-->', '<Esc><c-w>-a')
--- vim.keymap.set('i', '<A-=>', '<Esc><c-w>+a')
--- vim.keymap.set('i', '<A-0>', '<Esc><c-w><a')
--- vim.keymap.set('i', '<A-9>', '<Esc><c-w>>a')
 
 -- search
 vim.keymap.set('n', '/', '/\\v')
@@ -116,6 +97,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 -- vim.keymap.set('i', '<', '<><Left>')
+
 vim.keymap.set('i', '<CR>', function()
   local line = vim.api.nvim_get_current_line()
   local cursor = vim.api.nvim_win_get_cursor(0)[2]

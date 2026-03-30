@@ -62,15 +62,28 @@ vim.g.clipboard = {
   },
 }
 
-require('vim._extui').enable({
-  enable = true, -- Whether to enable or disable the UI.
-  msg = { -- Options related to the message module.
-    ---@type 'cmd'|'msg' Where to place regular messages, either in the
-    ---cmdline or in a separate ephemeral message window.
-    target = 'cmd',
-    timeout = 4000, -- Time a message is visible in the message window.
-  },
-})
+local ui2_ok, ui2 = pcall(require, 'vim._core.ui2')
+local extui_ok, extui = pcall(require, 'vim._extui')
+
+if ui2_ok then
+  ui2.enable({
+    enable = true,
+    msg = {
+      targets = 'cmd',
+      msg = {
+        timeout = 4000,
+      },
+    },
+  })
+elseif extui_ok then
+  extui.enable({
+    enable = true,
+    msg = {
+      target = 'cmd',
+      timeout = 4000,
+    },
+  })
+end
 
 -- load core config
 require("core.plugins")

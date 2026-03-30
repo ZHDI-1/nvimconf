@@ -3,6 +3,8 @@ local M = {}
 function M.config()
   local blink = require("blink.cmp")
   local mason_registry = require('mason-registry')
+  local uv = vim.uv
+  local nproc = #uv.cpu_info()
 
   -- 1. Helper: Get Mason Package Path Manually
   -- This avoids the "attempt to call method 'get_install_path'" error by constructing 
@@ -39,7 +41,7 @@ function M.config()
   })
 
   local servers = {
-    'clangd', 'html', 'ts_ls', 'lua_ls', 'zls', 'rust_analyzer',
+    'clangd', 'html', 'ts_ls', 'lua_ls', 'zls', 'rust_analyzer','gopls',
     'pylsp', 'vue_ls', 'lemminx', 'jsonls', 'verible', 'hdl_checker', 'bashls'
   }
 
@@ -58,7 +60,7 @@ function M.config()
       "build", "cmake-build-debug", "cmake-build-release", "cmake_build", "buildsofcmake",
     }
     local fallback_dir = "build"
-    local root_patterns = { '.git', '.clangd', 'compile_commands.json' }
+    local root_patterns = { '.git', 'compile_commands.json' }
     for _, dir in ipairs(possible_build_dirs) do
       table.insert(root_patterns, dir .. '/compile_commands.json')
     end
@@ -90,7 +92,9 @@ function M.config()
       "--limit-references=1000",
       "--limit-results=1000",
       "--rename-file-limit=500",
-      "-j", "48",
+      "-j=" .. nproc,
+      "--clang-tidy",
+      "--header-insertion=never",
       "--pch-storage=memory",
       "--compile-commands-dir=" .. compile_commands_dir
     }
@@ -101,7 +105,7 @@ function M.config()
   -- [clangd]
   vim.lsp.config('clangd', {
     cmd = get_clangd_cmd(),
-    root_markers = { '.clangd', 'compile_commands.json', '.git' }
+    root_markers = { 'compile_commands.json', '.git' }
   })
 
   -- [hdl_checker]

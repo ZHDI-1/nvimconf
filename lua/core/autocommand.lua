@@ -42,17 +42,6 @@ vim.api.nvim_create_autocmd('Filetype', {
   end
 })
 
-vim.api.nvim_create_augroup('change_comment_string', { clear = true })
-vim.api.nvim_create_autocmd('Filetype', {
-  group = 'change_comment_string',
-  pattern = { 'asm' },
-  callback = function()
-    vim.api.nvim_set_option_value("commentstring", "/*%s*/", {
-      buf = 0
-    })
-  end
-})
-
 -- vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'},{
 --   group = vim.api.nvim_create_augroup('TS_fold_workground', {clear = true}),
 --   callback = function ()

@@ -20,7 +20,10 @@ return require('packer').startup(function(use)
 
   -- language
   use 'neovim/nvim-lspconfig'
-  use 'L3MON4D3/LuaSnip'
+  use {
+    'L3MON4D3/LuaSnip',
+    run = "make install_jsregexp"
+  }
 
   use { 'saghen/blink.cmp',
     tag = "v1.*"
@@ -92,7 +95,7 @@ return require('packer').startup(function(use)
   -- might add: git-messager gitsigns
   -- lua dev pulgin
   -- all setup in miscedit.lua
-  use 'terrortylor/nvim-comment'
+  -- use 'terrortylor/nvim-comment'
   use 'kylechui/nvim-surround'
   use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
   use 'mbbill/undotree'

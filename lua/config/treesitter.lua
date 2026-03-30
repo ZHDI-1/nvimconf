@@ -30,6 +30,7 @@ function M.config()
     },
     indent = {
       enable = true,
+      disable = { "c", "cpp" },
     },
     incremental_selection = {
       enable = true,

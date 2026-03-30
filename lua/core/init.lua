@@ -67,7 +67,7 @@ require('vim._extui').enable({
   msg = { -- Options related to the message module.
     ---@type 'cmd'|'msg' Where to place regular messages, either in the
     ---cmdline or in a separate ephemeral message window.
-    target = 'msg',
+    target = 'cmd',
     timeout = 4000, -- Time a message is visible in the message window.
   },
 })
@@ -78,8 +78,9 @@ require("mason").setup()
 -- require("mason-lspconfig").setup {
 --   ensure_installed = {"clangd", 'lua_ls'}
 -- }
-require("nvim_comment").setup()
+-- require("nvim_comment").setup()
 require("nvim-surround").setup()
+require("config.lua_snip").config()
 if vim.g.shadowvim == nil and vim.g.vscode == nil then
   -- themes
   -- vim.g.gruvbox_material_background = 'hard'

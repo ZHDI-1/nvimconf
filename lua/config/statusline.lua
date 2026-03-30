@@ -17,14 +17,32 @@ function M.config()
       -- left
       lualine_a = { 'mode' },
       lualine_b = { 'filename', 'diff', {
-        'diagnostics',
-        sources = { 'nvim_lsp' },
-        colored = true
-      }
+          'diagnostics',
+          sources = { 'nvim_diagnostic' },
+          colored = true
+        }
       },
       lualine_c = {},
       -- right
       lualine_x = { 'encoding', 'fileformat', 'filetype' },
+      lualine_y = { 
+        {
+          'lsp_status',
+          icon = '', -- f013
+          symbols = {
+            -- Standard unicode symbols to cycle through for LSP progress:
+            spinner = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
+            -- Standard unicode symbol for when LSP is done:
+            done = '✓',
+            -- Delimiter inserted between LSP names:
+            separator = ' ',
+          },
+          -- List of LSP names to ignore (e.g., `null-ls`):
+          ignore_lsp = {},
+          -- Display the LSP name
+          show_name = true,
+        }
+      },
       lualine_z = { 'searchcount', 'location' }
     },
     inactive_sections = {
@@ -38,55 +56,48 @@ function M.config()
     extensions = {}
   }
 
+  -- local theme = {
+  --     -- this is carbonfox theme
+  --     fill = 'TabLineFill',
+  --     head = { fg = '#75beff', bg = '#1c1e26', style = 'italic' },
+  --     current_tab = { fg = '#1c1e26', bg = '#75beff', style = 'italic' },
+  --     tab = { fg = '#c5cdd9', bg = '#1c1e26', style = 'italic' },
+  --     win = { fg = '#1c1e26', bg = '#75beff', style = 'italic' },
+  --     tail = { fg = '#75beff', bg = '#1c1e26', style = 'italic' },
+  --   }
   local theme = {
-  fill = 'TabLineFill',
-  -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
-  head = 'TabLine',
-  current_tab = 'TabLineSel',
-  tab = 'TabLine',
-  win = 'TabLine',
-  tail = 'TabLine',
-}
-require('tabby').setup({
---   line = function(line)
---     return {
---       {
---         { '  ', hl = theme.head },
---         line.sep('', theme.head, theme.fill),
---       },
---       line.tabs().foreach(function(tab)
---         local hl = tab.is_current() and theme.current_tab or theme.tab
---         return {
---           line.sep('', hl, theme.fill),
---           tab.is_current() and '' or '󰆣',
---           tab.number(),
---           tab.name(),
---           tab.close_btn(''),
---           line.sep('', hl, theme.fill),
---           hl = hl,
---           margin = ' ',
---         }
---       end),
---       line.spacer(),
---       line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
---         return {
---           line.sep('', theme.win, theme.fill),
---           win.is_current() and '' or '',
---           win.buf_name(),
---           line.sep('', theme.win, theme.fill),
---           hl = theme.win,
---           margin = ' ',
---         }
---       end),
---       {
---         line.sep('', theme.tail, theme.fill),
---         { '  ', hl = theme.tail },
---       },
---       hl = theme.fill,
---     }
---   end,
---   -- option = {}, -- setup modules' option,
-})
+			fill = "TabLineFill",
+			current_tab = "TabLine",
+			tab = "NonText",
+			line_sep = "Cursor",
+		}
+  require('tabby.tabline').set(function(line)
+    return {
+				line.tabs().foreach(function(tab)
+					local hl = tab.is_current() and theme.current_tab or theme.tab
+
+					-- this plugin uses the background color of the highlight groups as the foreground of the symbol for the separators
+					local left_sep
+
+					if tab.is_current() then
+						left_sep = line.sep("▎", theme.line_sep, theme.current_tab)
+					else
+						left_sep = line.sep("▎", theme.fill, theme.fill)
+					end
+
+					return {
+						left_sep,
+						tab.number(),
+						tab.name(),
+						line.sep(" ", hl, theme.fill),
+						hl = hl,
+						margin = " ",
+					}
+				end),
+				hl = theme.fill,
+			}
+		end)
+
 end
 
 return M

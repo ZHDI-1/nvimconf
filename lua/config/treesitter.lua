@@ -1,19 +1,33 @@
 local M = {}
 
 function M.config()
-  -- nvim-treesitter config
-  -- local language_list = { "python", "javascript", "cmake", "css", "devicetree", "dot", "dockerfile", "html", "json",
-  --   "kconfig", "latex", "llvm", "luadoc", "make", "ninja", "rust", "zig", "swift", "tmux", "tsx", "tsv", "typescript",
-  --   "xml", "yaml", "bash", "c", "cpp", "vim", "lua", "markdown"}
-  local language_list = { "python", "bash", "c", "cpp" }
+  local parser_install_dir = vim.fn.stdpath("data") .. "/treesitter"
+  vim.opt.runtimepath:append(parser_install_dir)
+
+  local language_list = {
+    "bash",
+    "c",
+    "cpp",
+    "json",
+    "lua",
+    "markdown",
+    "python",
+    "query",
+    "rust",
+    "toml",
+    "vim",
+    "vimdoc",
+    "zig",
+  }
 
   ---@diagnostic disable-next-line: missing-fields
   require 'nvim-treesitter.configs'.setup {
     -- ensure_installed = "maintained", -- for installing all maintained parsers
     ensure_installed = language_list,
-    sync_install = true, -- install synchronously
+    parser_install_dir = parser_install_dir,
+    sync_install = false,
     ignore_install = {}, -- parsers to not install
-    auto_install = true,
+    auto_install = false,
     highlight = {
       enable = true,
       disable = function(lang, buf)
@@ -21,7 +35,7 @@ function M.config()
           return true
         end
         local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
             return true
         end
@@ -111,7 +125,9 @@ function M.config()
     },
     filename  = {
       [".zshrc"] = "sh",
-      [".zshenv"] = "sh"
+      [".zshenv"] = "sh",
+      [".bashrc"] = "sh",
+      [".bash_profile"] = "sh",
     }
   }
 

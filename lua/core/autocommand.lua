@@ -10,36 +10,29 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave'
   command = 'if &nu | set nornu | endif',
 })
 
-vim.api.nvim_create_augroup('autosave', { clear = true })
-vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertEnter', 'InsertLeave' }, {
-  pattern  = '*',
-  group    = 'autosave',
-  callback = function(args)
-    local win_conf = vim.api.nvim_win_get_config(vim.api.nvim_get_current_win())
-    local bufnr = vim.api.nvim_get_current_buf()
-    if vim.o.buftype == '' and
-        vim.o.readonly == false and
-        win_conf.relative == "" and
-        vim.api.nvim_get_option_value("modified", { buf = bufnr }) and
-        vim.api.nvim_buf_get_name(0) ~= "" and
-        vim.fn.expand('%:t') ~= 'wezterm.lua' and
-        vim.fn.expand('%:t') ~= 'alacritty.toml' then
-      vim.cmd('w')
-    end
-  end
-})
-
 vim.api.nvim_create_augroup('indentForConfigFile', { clear = true })
-vim.api.nvim_create_autocmd('Filetype', {
+vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'css', 'xcss', 'html', 'xhtml', 'javascript', 'typescript', 'yaml', 'lua', 'jsx', 'tsx', 'typescriptreact',
-    'javascriptreact', 'markdown', 'md', 'xml', 'json', 'sshconfig', 'lisp','verilog','systemverilog' },
+    'javascriptreact', 'markdown', 'md', 'xml', 'json', 'sshconfig', 'lisp', 'verilog', 'systemverilog', 'vue' },
   group = 'indentForConfigFile',
   callback = function()
     vim.opt_local.tabstop     = 2
     vim.opt_local.softtabstop = 2
     vim.opt_local.shiftwidth  = 2
   end
+})
+
+vim.api.nvim_create_augroup('makeIndent', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'make' },
+  group = 'makeIndent',
+  callback = function()
+    vim.opt_local.expandtab = false
+    vim.opt_local.tabstop = 8
+    vim.opt_local.softtabstop = 0
+    vim.opt_local.shiftwidth = 8
+  end,
 })
 
 -- vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'},{
@@ -205,9 +198,8 @@ vim.api.nvim_create_autocmd('FileType', {
       local fname = vim.fn.expand('%:t')
       local lines = vim.fn.getline(1, '$')
       local toc = {}
-      for _, line in ipairs(lines) do
+      for lnum, line in ipairs(lines) do
         if line:match('^%S') then
-          local lnum = vim.fn.line('.')
           table.insert(toc, fname .. '|' .. lnum .. '| ' .. line)
         end
       end

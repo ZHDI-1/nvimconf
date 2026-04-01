@@ -1,1 +1,1 @@
-dofile(vim.fn.stdpath("config") .. "/after/ftplugin/c.lua")
+require("config.c.common").setup()

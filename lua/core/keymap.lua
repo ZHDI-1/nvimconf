@@ -16,10 +16,14 @@ vim.keymap.set('t', '<C-[>', '<C-\\><C-N>', { noremap = true })
 -- vim.keymap.set('t', '<ESC>', '<C-\\><C-N>', { noremap = true })
 
 -- fzf-lua
-vim.keymap.set('n', '<leader>ff', function() require('fzf-lua').files() end, {})
-vim.keymap.set('n', '<leader>fg', function() require('fzf-lua').live_grep() end, {})
-vim.keymap.set('n', '<leader>e', function() require('fzf-lua').buffers() end, {})
-vim.keymap.set('n', '<leader>fl', function() require('fzf-lua').lgrep_curbuf() end, {})
+local search = require("core.search")
+
+vim.keymap.set('n', '<leader>ff', function() require('fzf-lua').files() end, { desc = "Find files" })
+vim.keymap.set('n', '<leader>fg', function() require('fzf-lua').live_grep() end, { desc = "Live grep" })
+vim.keymap.set('n', '<leader>fcf', function() search.files_from_current_dir() end, { desc = "Find files from current file dir" })
+vim.keymap.set('n', '<leader>fcg', function() search.live_grep_from_current_dir() end, { desc = "Live grep from current file dir" })
+vim.keymap.set('n', '<leader>e', function() require('fzf-lua').buffers() end, { desc = "Find buffers" })
+vim.keymap.set('n', '<leader>fl', function() require('fzf-lua').lgrep_curbuf() end, { desc = "Grep current buffer" })
 -- vim.keymap.set('n', '<leader>fcl', fzf_builtin.lines, {})
 -- vim.keymap.set('n', '<leader>ft', fzf_builtin.tmux_buffers, {})
 -- vim.keymap.set('n', '<leader>ft', fzf_builtin.tabs, {})
@@ -170,7 +174,6 @@ vim.keymap.set('i', '<BS>', function()
 end
 , { expr = true })
 
--- ts repeat
 vim.keymap.set({ "n", "x", "o" }, ";", function()
   require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next()
 end)

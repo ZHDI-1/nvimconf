@@ -6,6 +6,7 @@ return {
     config = function()
       require("config.oil").config()
     end,
+    lazy = false,
   },
   {
     "akinsho/toggleterm.nvim",

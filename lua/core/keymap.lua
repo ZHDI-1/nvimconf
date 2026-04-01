@@ -1,6 +1,5 @@
 -- general
 -- vim.keymap.set({'n', 'i', 'c', 'v', 'o', 's'}, '<C-f>', '<Esc>', { noremap = true})
-vim.g.mapleader = ' '
 -- vim.keymap.set({ 'n', 'v' }, '<Space>', 'Nop', { noremap = true })
 
 vim.keymap.set('i', '<C-a>', '<Home>')
@@ -17,22 +16,21 @@ vim.keymap.set('t', '<C-[>', '<C-\\><C-N>', { noremap = true })
 -- vim.keymap.set('t', '<ESC>', '<C-\\><C-N>', { noremap = true })
 
 -- fzf-lua
-local fzf_builtin = require('fzf-lua')
-vim.keymap.set('n', '<leader>ff', fzf_builtin.files, {})
-vim.keymap.set('n', '<leader>fg', fzf_builtin.live_grep, {})
-vim.keymap.set('n', '<leader>e', fzf_builtin.buffers, {})
-vim.keymap.set('n', '<leader>fl', fzf_builtin.lgrep_curbuf, {})
+vim.keymap.set('n', '<leader>ff', function() require('fzf-lua').files() end, {})
+vim.keymap.set('n', '<leader>fg', function() require('fzf-lua').live_grep() end, {})
+vim.keymap.set('n', '<leader>e', function() require('fzf-lua').buffers() end, {})
+vim.keymap.set('n', '<leader>fl', function() require('fzf-lua').lgrep_curbuf() end, {})
 -- vim.keymap.set('n', '<leader>fcl', fzf_builtin.lines, {})
 -- vim.keymap.set('n', '<leader>ft', fzf_builtin.tmux_buffers, {})
 -- vim.keymap.set('n', '<leader>ft', fzf_builtin.tabs, {})
 -- change ft to use tabby's window selector
-vim.keymap.set('n', '<leader>fs', fzf_builtin.lsp_live_workspace_symbols, {})
-vim.keymap.set('n', '<leader>fr', fzf_builtin.lsp_references, {})
-vim.keymap.set('n', '<leader>fi', fzf_builtin.lsp_incoming_calls, {})
-vim.keymap.set('n', '<leader>fo', fzf_builtin.lsp_outgoing_calls, {})
-vim.keymap.set('n', '<leader>fa', fzf_builtin.lsp_code_actions, {})
+vim.keymap.set('n', '<leader>fs', function() require('fzf-lua').lsp_live_workspace_symbols() end, {})
+vim.keymap.set('n', '<leader>fr', function() require('fzf-lua').lsp_references() end, {})
+vim.keymap.set('n', '<leader>fi', function() require('fzf-lua').lsp_incoming_calls() end, {})
+vim.keymap.set('n', '<leader>fo', function() require('fzf-lua').lsp_outgoing_calls() end, {})
+vim.keymap.set('n', '<leader>fa', function() require('fzf-lua').lsp_code_actions() end, {})
 -- vim.keymap.set('n', 'gr', fzf_builtin.lsp_references, {})
-vim.keymap.set('n', '<leader>fm', fzf_builtin.marks, {})
+vim.keymap.set('n', '<leader>fm', function() require('fzf-lua').marks() end, {})
 
 -- tabs
 vim.keymap.set('n', '<leader>tn', ':tabnext<CR>', { noremap = true })
@@ -173,24 +171,31 @@ end
 , { expr = true })
 
 -- ts repeat
-local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+vim.keymap.set({ "n", "x", "o" }, ";", function()
+  require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next()
+end)
+vim.keymap.set({ "n", "x", "o" }, ",", function()
+  require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous()
+end)
 
--- Repeat movement with ; and ,
--- ensure ; goes forward and , goes backward regardless of the last direction
-vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
-
--- Optionally, make builtin f, F, t, T also repeatable with ; and ,
-vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "f", function()
+  return require("nvim-treesitter.textobjects.repeatable_move").builtin_f_expr()
+end, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "F", function()
+  return require("nvim-treesitter.textobjects.repeatable_move").builtin_F_expr()
+end, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "t", function()
+  return require("nvim-treesitter.textobjects.repeatable_move").builtin_t_expr()
+end, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "T", function()
+  return require("nvim-treesitter.textobjects.repeatable_move").builtin_T_expr()
+end, { expr = true })
 
 -- fold
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
-vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith)
+vim.keymap.set('n', 'zR', function() require('ufo').openAllFolds() end)
+vim.keymap.set('n', 'zM', function() require('ufo').closeAllFolds() end)
+vim.keymap.set('n', 'zr', function() require('ufo').openFoldsExceptKinds() end)
+vim.keymap.set('n', 'zm', function() require('ufo').closeFoldsWith() end)
 
 
 local function navigate(direction)

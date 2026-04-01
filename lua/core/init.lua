@@ -10,6 +10,7 @@
 
 
 -- init
+vim.g.mapleader               = ' '
 vim.loader.enable()
 -- vim.cmd('syntax off')
 -- numbers
@@ -64,6 +65,7 @@ vim.g.clipboard = {
 
 local ui2_ok, ui2 = pcall(require, 'vim._core.ui2')
 local extui_ok, extui = pcall(require, 'vim._extui')
+local plugins_loaded = false
 
 if ui2_ok then
   ui2.enable({
@@ -85,113 +87,33 @@ elseif extui_ok then
   })
 end
 
--- load core config
-require("core.plugins")
-require("mason").setup()
--- require("mason-lspconfig").setup {
---   ensure_installed = {"clangd", 'lua_ls'}
--- }
--- require("nvim_comment").setup()
-require("nvim-surround").setup()
-require("config.lua_snip").config()
 if vim.g.shadowvim == nil and vim.g.vscode == nil then
-  -- themes
-  -- vim.g.gruvbox_material_background = 'hard'
-  -- vim.g.gruvbox_material_foreground = 'material'
-  -- vim.g.gruvbox_material_transparent_background = 0
-  -- vim.g.gruvbox_material_better_performance = 1
-  -- vim.o.background = 'dark'
-  -- vim.cmd([[colorscheme gruvbox-material]])
-  -- require("vscode")load()
-  --
-  -- vim.cmd("colorscheme kanagawa-dragon")
-  --
-  --
-  vim.g.everforest_background = 'hard'
-  vim.g.everforest_enable_italic = 1
-  vim.g.everforest_sign_column_background = 'grey'
-  vim.g.everforest_spell_foreground = 'colored'
-  vim.g.everforest_ui_contrast = 'high'
-  vim.g.everforest_diagnostic_text_highlight = 1
-  vim.g.everforest_diagnostic_line_highlight = 1
-  vim.cmd("colorscheme everforest")
-  require("config.lsp_config").config()
-  require("config.lsp_misc").config()
-  require('ufo').setup({
-    provider_selector = function(bufnr, filetype, buftype)
-      return { 'treesitter', 'indent' }
-    end
-  })
-  require("config.statusline").config()
-  require("config.oil").config()
-  require("config.terminal").config()
-  require("config.treesitter").config()
-  require('config.telescope').config()
-  -- require("tailwind-tools").setup({})
-  require("ibl").setup({
-    indent = {
-      char = '▏'
-    },
-    scope = {
-      enabled = true,
-      show_exact_scope = true,
-    }
-  })
+  plugins_loaded = require("core.plugins").setup()
 
-  require('gitsigns').setup {
-    signs                        = {
-      add          = { text = '┃' },
-      change       = { text = '┃' },
-      delete       = { text = '_' },
-      topdelete    = { text = '‾' },
-      changedelete = { text = '~' },
-      untracked    = { text = '┆' },
-    },
-    signs_staged                 = {
-      add          = { text = '┃' },
-      change       = { text = '┃' },
-      delete       = { text = '_' },
-      topdelete    = { text = '‾' },
-      changedelete = { text = '~' },
-      untracked    = { text = '┆' },
-    },
-    signs_staged_enable          = true,
-    signcolumn                   = true,  -- Toggle with `:Gitsigns toggle_signs`
-    numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
-    linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
-    word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
-    watch_gitdir                 = {
-      follow_files = true
-    },
-    auto_attach                  = true,
-    attach_to_untracked          = false,
-    current_line_blame           = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-    current_line_blame_opts      = {
-      virt_text = true,
-      virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-      delay = 1000,
-      ignore_whitespace = false,
-      virt_text_priority = 100,
-      use_focus = true,
-    },
-    current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
-    sign_priority                = 6,
-    update_debounce              = 100,
-    status_formatter             = nil,   -- Use default
-    max_file_length              = 40000, -- Disable if file is longer than this (in lines)
-    preview_config               = {
-      -- Options passed to nvim_open_win
-      style = 'minimal',
-      relative = 'cursor',
-      row = 0,
-      col = 1
-    },
-  }
-
-
-  -- require("leetcode").setup({
-  --   lang = "c",
-  -- })
+  if not plugins_loaded then
+    require("core.theme").setup()
+    require("mason").setup()
+    require("nvim-surround").setup()
+    require("config.lua_snip").config()
+    require("config.lsp").config()
+    require("config.lsp_misc").config()
+    require("config.ufo").config()
+    require("config.statusline").config()
+    require("config.oil").config()
+    require("config.terminal").config()
+    require("config.treesitter").config()
+    require("config.telescope").config()
+    require("ibl").setup({
+      indent = {
+        char = "▏",
+      },
+      scope = {
+        enabled = true,
+        show_exact_scope = true,
+      },
+    })
+    require("config.gitsigns").config()
+  end
 end
 require("core.autocommand")
 require("core.keymap")

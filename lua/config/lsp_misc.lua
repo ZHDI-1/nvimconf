@@ -1,7 +1,6 @@
 local M = {}
 
 function M.config()
-  local luasnip = require 'luasnip'
   local blink = require("blink.cmp")
 
   blink.setup({
@@ -142,9 +141,6 @@ function M.config()
     -- Fuzzy matcher settings
     fuzzy = { implementation = "prefer_rust_with_warning" }
   })
-
-  -- trouble setup
-  require("trouble").setup {}
 end
 
 return M

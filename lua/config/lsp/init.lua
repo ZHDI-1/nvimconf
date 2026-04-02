@@ -2,6 +2,7 @@ local M = {}
 
 local servers = {
   "bashls",
+  "basedpyright",
   "clangd",
   "gopls",
   "hdl_checker",
@@ -9,7 +10,7 @@ local servers = {
   "jsonls",
   "lemminx",
   "lua_ls",
-  "pylsp",
+  "ruff",
   "rust_analyzer",
   "ts_ls",
   "verible",

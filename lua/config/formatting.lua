@@ -27,11 +27,16 @@ local function python_formatters(bufnr)
   local conform = require("conform")
 
   if conform.get_formatter_info("ruff_format", bufnr).available then
-    return { "ruff_format", lsp_format = "fallback" }
+    return {
+      "ruff_fix",
+      "ruff_organize_imports",
+      "ruff_format",
+      lsp_format = "never",
+    }
   end
 
   if conform.get_formatter_info("black", bufnr).available then
-    local formatters = { lsp_format = "fallback" }
+    local formatters = { lsp_format = "never" }
 
     if conform.get_formatter_info("isort", bufnr).available then
       table.insert(formatters, "isort")

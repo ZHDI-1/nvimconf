@@ -92,7 +92,6 @@ if vim.g.shadowvim == nil and vim.g.vscode == nil then
 
   if not plugins_loaded then
     require("core.theme").setup()
-    require("mason").setup()
     require("nvim-surround").setup()
     require("config.lua_snip").config()
     require("config.lsp").config()

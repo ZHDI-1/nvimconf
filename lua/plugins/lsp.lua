@@ -1,11 +1,5 @@
 return {
   {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    build = ":MasonUpdate",
-    opts = {},
-  },
-  {
     "L3MON4D3/LuaSnip",
     event = "InsertEnter",
     build = "make install_jsregexp",
@@ -43,7 +37,6 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
       "saghen/blink.cmp",
     },
     config = function()

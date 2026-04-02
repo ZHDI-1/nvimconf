@@ -53,6 +53,12 @@ vim.keymap.set('n', "<leader>y", '"+y', { noremap = true })
 vim.keymap.set('v', "<leader>y", '"+y', { noremap = true })
 vim.keymap.set('n', "<leader>p", '"+p', { noremap = true })
 vim.keymap.set('v', "<leader>p", '"+p', { noremap = true })
+vim.keymap.set({ "n", "v" }, "<leader>gf", function()
+  require("conform").format({
+    async = false,
+    lsp_format = "fallback",
+  })
+end, { desc = "Format buffer or range" })
 
 
 -- search

@@ -115,18 +115,18 @@ case "$current_shell" in
     check_rc_contains zshrc-aliases-source "$HOME/.zshrc" '\.config/zsh/aliases\.zsh'
     check_rc_contains zsh-env-local-bin "$HOME/.config/zsh/env.zsh" 'local/bin'
     check_rc_contains zsh-env-go-bin "$HOME/.config/zsh/env.zsh" 'go/bin|GOPATH'
-    check_rc_contains zsh-env-rust-bin "$HOME/.config/zsh/env.zsh" '\\.cargo/bin|rustup/bin'
+    check_rc_contains zsh-env-rust-bin "$HOME/.config/zsh/env.zsh" '\.cargo/bin|rustup/bin'
     check_rc_contains zsh-env-fnm "$HOME/.config/zsh/env.zsh" 'fnm env'
     check_rc_contains zsh-interactive-fnm "$HOME/.config/zsh/interactive.zsh" 'fnm env'
     ;;
   bash)
     check_rc_contains bashrc-local-bin "$HOME/.bashrc" 'local/bin'
     check_rc_contains bashrc-go-bin "$HOME/.bashrc" 'go/bin|GOPATH'
-    check_rc_contains bashrc-rust-bin "$HOME/.bashrc" '\\.cargo/bin|rustup/bin'
+    check_rc_contains bashrc-rust-bin "$HOME/.bashrc" '\.cargo/bin|rustup/bin'
     check_rc_contains bashrc-fnm "$HOME/.bashrc" 'fnm env'
     check_rc_contains bash_profile-local-bin "$HOME/.bash_profile" 'local/bin|\\.bashrc|\\.profile'
     check_rc_contains bash_profile-go-bin "$HOME/.bash_profile" 'go/bin|GOPATH|\\.bashrc|\\.profile'
-    check_rc_contains bash_profile-rust-bin "$HOME/.bash_profile" '\\.cargo/bin|rustup/bin|\\.bashrc|\\.profile'
+    check_rc_contains bash_profile-rust-bin "$HOME/.bash_profile" '\.cargo/bin|rustup/bin|\.bashrc|\.profile'
     ;;
 esac
 
@@ -140,7 +140,7 @@ echo "[python]"
 check_cmd basedpyright basedpyright
 check_cmd basedpyright-langserver basedpyright-langserver
 check_cmd ruff ruff
-check_cmd hdl_checker hdl_checker
+check_optional_cmd hdl_checker hdl_checker
 
 echo
 echo "[go]"

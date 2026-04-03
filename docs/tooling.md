@@ -40,11 +40,13 @@ Or run the wrapper:
 - Python tools:
   - `uv tool`
 - Node and web tooling:
-  - `fnm` + `npm -g`
+  - `fnm` owns the Node runtime on both macOS and Fedora
+  - `npm -g` installs editor-specific language servers only after `fnm` has activated the current LTS
 - Go tooling:
   - `go install`
 - Rust tooling:
-  - `rustup component add`
+  - `rustup` owns the Rust toolchain and components
+  - Cargo installs repo-specific Rust CLI tools that are not shipped as `rustup` components
 
 ## Shell Setup
 
@@ -75,7 +77,7 @@ Do not keep critical PATH setup only in `~/.zshrc` or `~/.bashrc`, because non-i
 
 - `ts_ls` uses `npm root -g` to locate `@vue/language-server` for Vue support.
 - Python uses `ruff` and `basedpyright` now; `pylsp` is removed.
-- `bootstrap-node-tools.sh` will install and activate the current Node LTS through `fnm` before installing npm-based language servers.
-- `bootstrap-rust-tools.sh` will initialize `rustup` with `stable` if no default toolchain exists yet.
+- `bootstrap-node-tools.sh` is the only supported way to initialize Node for this repo; it will install `fnm` if needed, activate the current Node LTS, then install npm-based language servers into that `fnm`-managed runtime.
+- `bootstrap-rust-tools.sh` is the only supported Rust bootstrap for this repo; it initializes `rustup` with `stable`, installs rustup components, and uses `cargo` only for editor-specific tools like `stylua` and `taplo`.
 - `lemminx` and `verible-verilog-ls` are treated as optional in the bootstrap because package availability is inconsistent across package managers.
 - `hdl_checker` is installed with `uv tool` because it is a Python package.

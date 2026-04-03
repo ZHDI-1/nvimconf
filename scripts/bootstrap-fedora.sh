@@ -34,19 +34,13 @@ required_specs=(
   "tmux"
   "clang-tools-extra"
   "golang go"
-  "lua-language-server"
-  "rustup"
   "shfmt"
-  "stylua"
-  "taplo taplo-cli"
   "tree-sitter-cli tree-sitter"
   "uv"
   "zig"
-  "fnm"
 )
 
 optional_specs=(
-  "zls"
   "lemminx"
   "verible verible-verilog-ls"
 )

@@ -57,16 +57,7 @@ else
   echo "skip: go is not installed"
 fi
 
-if command -v rustup >/dev/null 2>&1 || command -v rustup-init >/dev/null 2>&1 || [[ -x /usr/bin/rustup-init ]] || [[ -x /usr/sbin/rustup-init ]]; then
-  "$repo_root/scripts/bootstrap-rust-tools.sh"
-else
-  echo "skip: rustup is not installed"
-fi
-
-if command -v fnm >/dev/null 2>&1; then
-  "$repo_root/scripts/bootstrap-node-tools.sh"
-else
-  echo "skip: fnm is not installed"
-fi
+"$repo_root/scripts/bootstrap-rust-tools.sh"
+"$repo_root/scripts/bootstrap-node-tools.sh"
 
 "$repo_root/scripts/check-tools.sh"

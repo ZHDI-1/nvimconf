@@ -66,7 +66,7 @@ for spec in "${optional_specs[@]}"; do
 done
 
 if ((${#installable[@]} > 0)); then
-  sudo dnf install -y "${installable[@]}"
+  sudo dnf install -y --setopt=install_weak_deps=False "${installable[@]}"
 fi
 
 if ! command -v fd >/dev/null 2>&1 && command -v fdfind >/dev/null 2>&1; then

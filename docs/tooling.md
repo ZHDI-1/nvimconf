@@ -64,6 +64,13 @@ export PATH="$(brew --prefix rustup)/bin:$PATH"
 eval "$(fnm env --shell zsh)"
 ```
 
+If you launch Neovim from GUI apps, a login shell, or a long-lived tmux server, put the PATH exports in your login shell file too:
+
+- zsh: `~/.zprofile`
+- bash: `~/.bash_profile` or `~/.profile`
+
+Do not keep critical PATH setup only in `~/.zshrc` or `~/.bashrc`, because non-interactive launches may miss it.
+
 ## Notes
 
 - `ts_ls` uses `npm root -g` to locate `@vue/language-server` for Vue support.

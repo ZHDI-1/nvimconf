@@ -7,6 +7,7 @@ function M.executable(binary_name)
   if bin_path ~= "" then
     return bin_path
   end
+
   return binary_name
 end
 

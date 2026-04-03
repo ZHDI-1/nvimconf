@@ -7,6 +7,11 @@ if ! command -v rustup >/dev/null 2>&1 && command -v brew >/dev/null 2>&1; then
   fi
 fi
 
+if ! command -v rustup >/dev/null 2>&1 && command -v rustup-init >/dev/null 2>&1; then
+  rustup-init -y --profile minimal --default-toolchain stable
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 if ! command -v rustup >/dev/null 2>&1; then
   echo "error: rustup is not installed" >&2
   exit 1

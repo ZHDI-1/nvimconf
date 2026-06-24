@@ -1,38 +1,58 @@
-vim.api.nvim_create_augroup('numbertoggle', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained', 'InsertLeave', 'WinEnter' }, {
-  pattern = '*',
-  group   = 'numbertoggle',
-  command = 'if &nu && mode() != "i" | set rnu | endif',
+vim.api.nvim_create_augroup("numbertoggle", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
+	pattern = "*",
+	group = "numbertoggle",
+	command = 'if &nu && mode() != "i" | set rnu | endif',
 })
-vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave' }, {
-  pattern = '*',
-  group = 'numbertoggle',
-  command = 'if &nu | set nornu | endif',
-})
-
-vim.api.nvim_create_augroup('indentForConfigFile', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = {
-    'css', 'xcss', 'html', 'xhtml', 'javascript', 'typescript', 'yaml', 'lua', 'jsx', 'tsx', 'typescriptreact',
-    'javascriptreact', 'markdown', 'md', 'xml', 'json', 'sshconfig', 'lisp', 'verilog', 'systemverilog', 'vue' },
-  group = 'indentForConfigFile',
-  callback = function()
-    vim.opt_local.tabstop     = 2
-    vim.opt_local.softtabstop = 2
-    vim.opt_local.shiftwidth  = 2
-  end
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
+	pattern = "*",
+	group = "numbertoggle",
+	command = "if &nu | set nornu | endif",
 })
 
-vim.api.nvim_create_augroup('makeIndent', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'make' },
-  group = 'makeIndent',
-  callback = function()
-    vim.opt_local.expandtab = false
-    vim.opt_local.tabstop = 8
-    vim.opt_local.softtabstop = 0
-    vim.opt_local.shiftwidth = 8
-  end,
+vim.api.nvim_create_augroup("indentForConfigFile", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"css",
+		"xcss",
+		"html",
+		"xhtml",
+		"javascript",
+		"typescript",
+		"yaml",
+		"lua",
+		"jsx",
+		"tsx",
+		"typescriptreact",
+		"javascriptreact",
+		"markdown",
+		"md",
+		"xml",
+		"json",
+		"sshconfig",
+		"lisp",
+		"verilog",
+		"systemverilog",
+		"vue",
+	},
+	group = "indentForConfigFile",
+	callback = function()
+		vim.opt_local.tabstop = 2
+		vim.opt_local.softtabstop = 2
+		vim.opt_local.shiftwidth = 2
+	end,
+})
+
+vim.api.nvim_create_augroup("makeIndent", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "make" },
+	group = "makeIndent",
+	callback = function()
+		vim.opt_local.expandtab = false
+		vim.opt_local.tabstop = 8
+		vim.opt_local.softtabstop = 0
+		vim.opt_local.shiftwidth = 8
+	end,
 })
 
 -- vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'},{
@@ -96,18 +116,18 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Function to safely get project root using LSP (optional, can be adapted or removed if not needed for loading)
 -- Note: This function is less critical in the revised approach but kept for potential future use or adaptation.
 local function get_lsp_project_root(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
-  -- Ensure LSP is ready, might need vim.schedule if called too early
-  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
-  if #clients > 0 then
-    -- Prefer clients with a known root_dir
-    for _, client in ipairs(clients) do
-      if client and client.root_dir then
-        return client.root_dir
-      end
-    end
-  end
-  return nil -- No suitable LSP client found for this buffer
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	-- Ensure LSP is ready, might need vim.schedule if called too early
+	local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+	if #clients > 0 then
+		-- Prefer clients with a known root_dir
+		for _, client in ipairs(clients) do
+			if client and client.root_dir then
+				return client.root_dir
+			end
+		end
+	end
+	return nil -- No suitable LSP client found for this buffer
 end
 
 -- Autocommand to Load Session on Neovim Start
@@ -191,23 +211,23 @@ end
 -- })
 --
 
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'help',
-  callback = function()
-    vim.keymap.set('n', 'gO', function()
-      local fname = vim.fn.expand('%:t')
-      local lines = vim.fn.getline(1, '$')
-      local toc = {}
-      for lnum, line in ipairs(lines) do
-        if line:match('^%S') then
-          table.insert(toc, fname .. '|' .. lnum .. '| ' .. line)
-        end
-      end
-      vim.fn.setqflist({}, ' ', {
-        title = 'TOC',
-        lines = toc,
-      })
-      vim.cmd('copen')
-    end, { buffer = true })
-  end
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "help",
+	callback = function()
+		vim.keymap.set("n", "gO", function()
+			local fname = vim.fn.expand("%:t")
+			local lines = vim.fn.getline(1, "$")
+			local toc = {}
+			for lnum, line in ipairs(lines) do
+				if line:match("^%S") then
+					table.insert(toc, fname .. "|" .. lnum .. "| " .. line)
+				end
+			end
+			vim.fn.setqflist({}, " ", {
+				title = "TOC",
+				lines = toc,
+			})
+			vim.cmd("copen")
+		end, { buffer = true })
+	end,
 })

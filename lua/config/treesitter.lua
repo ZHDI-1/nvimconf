@@ -1,151 +1,86 @@
 local M = {}
 
 function M.config()
-  local parser_install_dir = vim.fn.stdpath("data") .. "/treesitter"
-  vim.opt.runtimepath:append(parser_install_dir)
+	local parser_install_dir = vim.fn.stdpath("data") .. "/treesitter"
 
-  local language_list = {
-    "bash",
-    "c",
-    "cpp",
-    "json",
-    "lua",
-    "markdown",
-    "python",
-    "query",
-    "rust",
-    "toml",
-    "vim",
-    "vimdoc",
-    "zig",
-  }
+	local language_list = {
+		"bash",
+		"c",
+		"cpp",
+		"json",
+		"lua",
+		"markdown",
+		"python",
+		"query",
+		"rust",
+		"toml",
+		"vim",
+		"vimdoc",
+		"zig",
+	}
 
-  ---@diagnostic disable-next-line: missing-fields
-  require 'nvim-treesitter.configs'.setup {
-    -- ensure_installed = "maintained", -- for installing all maintained parsers
-    ensure_installed = language_list,
-    parser_install_dir = parser_install_dir,
-    sync_install = false,
-    ignore_install = {}, -- parsers to not install
-    auto_install = false,
-    highlight = {
-      enable = true,
-      disable = function(lang, buf)
-        if (lang == 'verilog') then
-          return true
-        end
-        local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-        if ok and stats and stats.size > max_filesize then
-            return true
-        end
-    end,
-      additional_vim_regex_highlighting = false, -- disable standard vim highlighting
-    },
-    indent = {
-      enable = true,
-      disable = { "c", "cpp" },
-    },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = false,
-        node_incremental = "grn",
-        scope_incremental = "grc",
-        node_decremental = "grm",
-      }
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true,
+	local language_set = {}
+	for _, lang in ipairs(language_list) do
+		language_set[lang] = true
+	end
 
-        keymaps = {
-          ['af'] = "@function.outer",
-          ['if'] = "@function.inner",
-          ['ac'] = "@class.outer",
-          ['ic'] = "@class.inner",
-          ['aa'] = "@assignment.outer",
-          ['ia'] = "@assignment.inner",
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = "@parameter.inner",
-        },
-        swap_previous = {
-          ['<leader>A'] = "@parameter.inner",
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          ["]m"] = "@function.outer",
-          ["]]"] = "@class.outer",
-          ["]o"] = "@loop.*",
-          ["]s"] = { query = "@scope", query_group = "locals", desc = "Next scope" },
-          ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
-        },
-        goto_next_end = {
-          ["]M"] = "@function.outer",
-          ["]["] = "@class.outer",
-        },
-        goto_previous_start = {
-          ["[m"] = "@function.outer",
-          ["[["] = "@class.outer",
-        },
-        goto_previous_end = {
-          ["[M"] = "@function.outer",
-          ["[]"] = "@class.outer",
-        },
-        goto_next = {
-          ["]d"] = "@conditional.outer",
-        },
-        goto_previous = {
-          ["[d"] = "@conditional.outer",
-        }
-      },
-      lsp_interop = {
-        enable = true,
-        border = 'none',
-        floating_preview_opts = {},
-        peek_definition_code = {
-          ["<leader>df"] = "@function.outer",
-          ["<leader>dF"] = "@class.outer",
-        },
-      }
-    }
-  }
-  vim.filetype.add {
-    extension = {
-      zsh = "sh",
-      sh  = "sh",
-    },
-    filename  = {
-      [".zshrc"] = "sh",
-      [".zshenv"] = "sh",
-      [".bashrc"] = "sh",
-      [".bash_profile"] = "sh",
-    }
-  }
+	local disable_indent = {
+		c = true,
+		cpp = true,
+	}
 
-  require'treesitter-context'.setup{
-  enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-  multiwindow = false, -- Enable multiwindow support.
-  max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-  min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-  line_numbers = true,
-  multiline_threshold = 20, -- Maximum number of lines to show for a single context
-  trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-  mode = 'topline',  -- Line used to calculate context. Choices: 'cursor', 'topline'
-  -- Separator between context and content. Should be a single character string, like '-'.
-  -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-  separator = nil,
-  zindex = 20, -- The Z-index of the context window
-  on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
-}
+	local ts = require("nvim-treesitter")
+	ts.setup({
+		install_dir = parser_install_dir,
+	})
+
+	vim.api.nvim_create_autocmd("FileType", {
+		group = vim.api.nvim_create_augroup("UserTreesitterStart", { clear = true }),
+		callback = function(args)
+			local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+			if not lang or not language_set[lang] or lang == "verilog" then
+				return
+			end
+
+			local max_filesize = 100 * 1024
+			local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(args.buf))
+			if ok and stats and stats.size > max_filesize then
+				return
+			end
+
+			local started = pcall(vim.treesitter.start, args.buf, lang)
+			if started and not disable_indent[lang] then
+				vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+			end
+		end,
+	})
+
+	vim.filetype.add({
+		extension = {
+			zsh = "sh",
+			sh = "sh",
+		},
+		filename = {
+			[".zshrc"] = "sh",
+			[".zshenv"] = "sh",
+			[".bashrc"] = "sh",
+			[".bash_profile"] = "sh",
+		},
+	})
+
+	require("treesitter-context").setup({
+		enable = true,
+		multiwindow = false,
+		max_lines = 0,
+		min_window_height = 0,
+		line_numbers = true,
+		multiline_threshold = 20,
+		trim_scope = "outer",
+		mode = "topline",
+		separator = nil,
+		zindex = 20,
+		on_attach = nil,
+	})
 end
 
 return M

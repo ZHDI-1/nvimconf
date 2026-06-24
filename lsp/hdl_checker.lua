@@ -1,3 +1,3 @@
 return {
-  filetypes = { "vhdl" },
+	filetypes = { "vhdl" },
 }

@@ -4,6 +4,7 @@ local uv = vim.uv
 
 M.build_dirs = {
 	"build",
+	"clangd-build",
 	"cmake-build-debug",
 	"cmake-build-release",
 	"cmake_build",

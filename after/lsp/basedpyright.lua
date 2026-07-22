@@ -21,10 +21,7 @@ return {
 		},
 	},
 	before_init = function(_, config)
-		config.settings = vim.tbl_deep_extend("force", config.settings or {}, {
-			python = {
-				pythonPath = project.find_python_from_root(config.root_dir),
-			},
-		})
+		config.settings.python = config.settings.python or {}
+		config.settings.python.pythonPath = project.find_python_from_root(config.root_dir)
 	end,
 }

@@ -1,6 +1,7 @@
 local M = {}
 
 function M.setup()
+  vim.o.background = "light"
 	vim.g.everforest_background = "hard"
 	vim.g.everforest_enable_italic = 1
 	vim.g.everforest_sign_column_background = "grey"

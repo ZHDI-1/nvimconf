@@ -83,11 +83,38 @@ vim.keymap.set({ "n", "v" }, "<leader>gf", function()
 end, { desc = "Format buffer or range" })
 
 -- search
+local pinned_search = require("core.pinned_search")
+
 vim.keymap.set("n", "/", "/\\v")
 -- vim.keymap.set('i', '<a-/>', '<Esc>/\\v')
 vim.keymap.set("n", "<a-r>", ":s/\\v//g<Left><Left><Left>")
 vim.keymap.set("v", "<a-r>", ":s/\\v//g<Left><Left><Left>")
 -- vim.keymap.set('i', '<a-r>', '<Esc>:s/\\v//g<Left><Left><Left>')
+
+vim.keymap.set("n", "<leader>hp", pinned_search.pin_current_search, {
+	desc = "Pin current search",
+})
+vim.keymap.set("n", "<leader>hw", pinned_search.toggle_cursor_word, {
+	desc = "Toggle pinned word under cursor",
+})
+vim.keymap.set("n", "<leader>hj", pinned_search.select_next, {
+	desc = "Select next pinned search",
+})
+vim.keymap.set("n", "<leader>hk", pinned_search.select_previous, {
+	desc = "Select previous pinned search",
+})
+vim.keymap.set("n", "]h", pinned_search.jump_next, {
+	desc = "Next selected pinned match",
+})
+vim.keymap.set("n", "[h", pinned_search.jump_previous, {
+	desc = "Previous selected pinned match",
+})
+vim.keymap.set("n", "<leader>hd", pinned_search.remove_selected, {
+	desc = "Delete selected pinned search",
+})
+vim.keymap.set("n", "<leader>hC", pinned_search.clear, {
+	desc = "Clear pinned searches",
+})
 
 -- touble
 vim.keymap.set("n", "<leader>xx", function()

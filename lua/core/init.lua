@@ -114,3 +114,4 @@ if vim.g.shadowvim == nil and vim.g.vscode == nil then
 end
 require("core.autocommand")
 require("core.keymap")
+require("core.clangd_index").setup()

@@ -24,17 +24,24 @@ function M.config()
 				["<C-r>"] = "preview-reset",
 				["<C-d>"] = "preview-page-down",
 				["<C-u>"] = "preview-page-up",
-				["<C-j>"] = "preview-down",
-				["<C-k>"] = "preview-up",
+				-- ["<C-j>"] = "preview-down",
+				["<C-k>"] = false,
 			},
 			fzf = {
 				-- fzf '--bind=' options
 				-- true,        -- uncomment to inherit all the below in your custom config
 				["ctrl-z"] = "abort",
-				["ctrl-f"] = "half-page-down",
-				["ctrl-b"] = "half-page-up",
+				-- ["ctrl-f"] = "half-page-down",
+				-- ["ctrl-b"] = "half-page-up",
+
 				["ctrl-a"] = "beginning-of-line",
 				["ctrl-e"] = "end-of-line",
+        ["ctrl-b"] = "backward-char",
+        ["ctrl-f"] = "forward-char",
+        ["ctrl-k"] = "kill-line",
+
+
+
 				["alt-q"] = "select-all+accept",
 				["ctrl-y"] = "toggle-down",
 				["alt-a"] = "toggle-all",
@@ -51,6 +58,7 @@ function M.config()
 				["ctrl-q"] = actions.file_sel_to_qf,
 				["alt-q"] = actions.file_sel_to_qf,
 			},
+			follow = true,
 		},
 		buffers = {
 			actions = {
@@ -60,10 +68,13 @@ function M.config()
 			},
 		},
 		grep = {
+			rg_opts = "--column --line-number --no-heading --color=always "
+				.. "--smart-case --max-columns=4096 --no-messages -e",
 			actions = {
 				["ctrl-q"] = actions.file_sel_to_qf,
 				["alt-q"] = actions.file_sel_to_qf,
 			},
+			follow = true,
 		},
 		marks = {
 			actions = {

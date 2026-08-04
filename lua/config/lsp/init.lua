@@ -19,6 +19,9 @@ local servers = {
 }
 
 function M.config()
+	local lsp_log = require("config.lsp.log")
+	lsp_log.setup(servers)
+
 	local blink = require("blink.cmp")
 	local capabilities = blink.get_lsp_capabilities()
 
@@ -29,6 +32,7 @@ function M.config()
 
 	vim.lsp.config("*", {
 		capabilities = capabilities,
+		handlers = lsp_log.handlers,
 	})
 
 	vim.lsp.enable(servers)

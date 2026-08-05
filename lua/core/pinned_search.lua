@@ -6,13 +6,14 @@ local state_by_window = {}
 
 local theme_highlights = {
 	"Search",
-	"CurSearch",
 	"IncSearch",
-	"Visual",
-	"PmenuSel",
-	"DiffAdd",
-	"DiffChange",
-	"Todo",
+}
+
+local variant_adjustments = {
+	{ hue = -0.04, saturation = 0.01, lightness = -0.08 },
+	{ hue = -0.007, saturation = 0.02, lightness = -0.025 },
+	{ hue = 0.007, saturation = -0.01, lightness = 0.025 },
+	{ hue = 0.02, saturation = -0.02, lightness = 0.08 },
 }
 
 local function clamp(value, minimum, maximum)
@@ -30,6 +31,10 @@ local function get_highlight(name)
 	end
 
 	return {}
+end
+
+local function is_usable_color(color)
+	return type(color) == "number" and color ~= 0
 end
 
 local function color_to_rgb(color)
@@ -107,28 +112,42 @@ end
 
 local function variant_background(base_color, index)
 	local hue, saturation, lightness = rgb_to_hsl(base_color)
-	local offset = index - (HIGHLIGHT_VARIANTS + 1) / 2
+	local adjustment = variant_adjustments[index]
 
 	return hsl_to_rgb(
-		(hue + offset * 0.025) % 1,
-		clamp(saturation + offset * 0.01, 0, 1),
-		clamp(lightness + offset * 0.035, 0.12, 0.88)
+		(hue + adjustment.hue) % 1,
+		clamp(saturation + adjustment.saturation, 0, 1),
+		clamp(lightness + adjustment.lightness, 0.08, 0.92)
 	)
 end
 
 local function setup_highlights()
 	local normal = get_highlight("Normal")
-	local base = normal
+	local backgrounds = {}
+	local default_foreground = normal.fg
 
 	for _, name in ipairs(theme_highlights) do
 		local highlight = get_highlight(name)
-		if highlight.bg ~= nil then
-			base = highlight
-			break
+		if is_usable_color(highlight.bg) then
+			table.insert(backgrounds, {
+				bg = highlight.bg,
+				fg = highlight.fg,
+			})
+		end
+
+		if not is_usable_color(default_foreground) and is_usable_color(highlight.fg) then
+			default_foreground = highlight.fg
 		end
 	end
 
-	if base.bg == nil then
+	if #backgrounds == 0 and is_usable_color(normal.fg) then
+		table.insert(backgrounds, {
+			bg = normal.fg,
+			fg = is_usable_color(normal.bg) and normal.bg or nil,
+		})
+	end
+
+	if #backgrounds == 0 then
 		for index = 1, HIGHLIGHT_VARIANTS do
 			vim.api.nvim_set_hl(0, "PinnedSearch" .. index, {
 				link = "Search",
@@ -137,21 +156,17 @@ local function setup_highlights()
 		return
 	end
 
-	local foreground = base.fg or normal.fg
-
-	if foreground == nil then
-		for _, name in ipairs(theme_highlights) do
-			local highlight = get_highlight(name)
-			if highlight.fg ~= nil then
-				foreground = highlight.fg
-				break
-			end
-		end
-	end
-
 	for index = 1, HIGHLIGHT_VARIANTS do
+		local source_index = ((index - 1) % #backgrounds) + 1
+		local variant_index = math.floor((index - 1) / #backgrounds) + 1
+		local source = backgrounds[source_index]
+		local foreground = is_usable_color(source.fg) and source.fg or default_foreground
+		if not is_usable_color(foreground) and is_usable_color(normal.bg) then
+			foreground = normal.bg
+		end
+
 		local options = {
-			bg = variant_background(base.bg, index),
+			bg = variant_background(source.bg, variant_index),
 			bold = true,
 		}
 
@@ -350,6 +365,11 @@ end
 local group = vim.api.nvim_create_augroup("pinned_search", { clear = true })
 
 vim.api.nvim_create_autocmd("ColorScheme", {
+	group = group,
+	callback = setup_highlights,
+})
+
+vim.api.nvim_create_autocmd("VimEnter", {
 	group = group,
 	callback = setup_highlights,
 })

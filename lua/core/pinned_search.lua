@@ -201,6 +201,13 @@ local function find_pattern(state, pattern)
 	return nil
 end
 
+local function sync_selected_search(state)
+	local item = state.selected and state.matches[state.selected]
+	if item then
+		vim.fn.setreg("/", item.pattern)
+	end
+end
+
 local function remove_at(window, state, index)
 	local item = table.remove(state.matches, index)
 	if not item then
@@ -230,6 +237,7 @@ local function add_pattern(pattern, label)
 
 	if existing then
 		state.selected = existing
+		sync_selected_search(state)
 		vim.notify(("Pattern already pinned and selected: /%s/"):format(label or pattern))
 		return
 	end
@@ -249,6 +257,7 @@ local function add_pattern(pattern, label)
 		label = label or pattern,
 	})
 	state.selected = #state.matches
+	sync_selected_search(state)
 
 	vim.notify(("Pinned #%d /%s/"):format(state.selected, label or pattern))
 end
@@ -295,6 +304,7 @@ function M.select_next()
 	end
 
 	state.selected = ((state.selected or 0) % #state.matches) + 1
+	sync_selected_search(state)
 	local item = state.matches[state.selected]
 	vim.notify(("Selected #%d /%s/"):format(state.selected, item.label))
 end
@@ -309,6 +319,7 @@ function M.select_previous()
 
 	local current = state.selected or 1
 	state.selected = ((current - 2) % #state.matches) + 1
+	sync_selected_search(state)
 	local item = state.matches[state.selected]
 	vim.notify(("Selected #%d /%s/"):format(state.selected, item.label))
 end

@@ -6,6 +6,7 @@ function M.config()
 		winopts = {
 			height = 1, -- window height
 		},
+		fzf_colors = true,
 		keymap = {
 			builtin = {
 				["<M-Esc>"] = "hide", -- hide fzf-lua, `:FzfLua resume` to continue
@@ -36,11 +37,9 @@ function M.config()
 
 				["ctrl-a"] = "beginning-of-line",
 				["ctrl-e"] = "end-of-line",
-        ["ctrl-b"] = "backward-char",
-        ["ctrl-f"] = "forward-char",
-        ["ctrl-k"] = "kill-line",
-
-
+				["ctrl-b"] = "backward-char",
+				["ctrl-f"] = "forward-char",
+				["ctrl-k"] = "kill-line",
 
 				["alt-q"] = "select-all+accept",
 				["ctrl-y"] = "toggle-down",

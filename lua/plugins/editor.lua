@@ -68,4 +68,24 @@ return {
 			require("flutter-tools").setup({})
 		end,
 	},
+	{
+		"ZHDI-1/codex-history.nvim",
+		branch = "feat/markdown-treesitter",
+		build = "cargo install --path . --force",
+		cmd = {
+			"CodexHistory",
+			"CodexHistoryRefresh",
+			"CodexHistoryBack",
+			"CodexHistoryFull",
+			"CodexHistoryAnswers",
+			"CodexHistoryToggle",
+			"CodexHistoryExport",
+		},
+		keys = {
+			{ "<leader>ch", "<cmd>CodexHistory<cr>", desc = "Browse Codex history" },
+		},
+		config = function()
+			require("codex_history").setup()
+		end,
+	},
 }

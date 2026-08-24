@@ -70,7 +70,7 @@ return {
 	},
 	{
 		"ZHDI-1/codex-history.nvim",
-		branch = "feat/markdown-treesitter",
+		branch = "main",
 		build = "cargo install --path . --force",
 		cmd = {
 			"CodexHistory",

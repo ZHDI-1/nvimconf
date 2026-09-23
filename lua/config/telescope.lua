@@ -53,6 +53,7 @@ function M.config()
 		},
 		files = {
 			cwd_header = true,
+			line_query = true,
 			actions = {
 				["ctrl-q"] = actions.file_sel_to_qf,
 				["alt-q"] = actions.file_sel_to_qf,

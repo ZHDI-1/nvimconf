@@ -174,7 +174,7 @@ local function resolve(options)
 		return nil,
 			(
 				"project detected at %s, but no compile_commands.json was found "
-				.. "(markers: .git, compile_commands.json, .nvim-workspace)"
+				.. "(markers: .git, compile_commands.json)"
 			):format(identity)
 	end
 

@@ -82,6 +82,14 @@ vim.keymap.set({ "n", "v" }, "<leader>gf", function()
 	})
 end, { desc = "Format buffer or range" })
 
+-- git hunks
+vim.keymap.set("n", "]c", function()
+	require("gitsigns").nav_hunk("next")
+end, { desc = "Next Git hunk" })
+vim.keymap.set("n", "[c", function()
+	require("gitsigns").nav_hunk("prev")
+end, { desc = "Previous Git hunk" })
+
 -- search
 local pinned_search = require("core.pinned_search")
 
